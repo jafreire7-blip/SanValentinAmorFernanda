@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Snoopy & Tú | Regalo Especial</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Patrick+Hand&display=swap" rel="stylesheet">
+    <style>
+        /* ================== ESTILOS GENERALES Y TEMA SNOOPY ================== */
+        :root {
+            --bg-color: #ffe6e6;
+            --charlie-shirt: #ffe03d; /* Amarillo Woodstock */
+            --snoopy-red: #d32f2f;
+            --snoopy-black: #333;
+            --cloud-white: #ffffff;
+            --font-title: 'Fredoka One', cursive;
+            --font-body: 'Patrick Hand', cursive;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            background-image: radial-gradient(#ffcdd2 15%, transparent 16%), radial-gradient(#ffcdd2 15%, transparent 16%);
+            background-size: 60px 60px;
+            background-position: 0 0, 30px 30px;
+            font-family: var(--font-body);
+            margin: 0; padding: 0; color: var(--snoopy-black);
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3 { font-family: var(--font-title); color: var(--snoopy-red); text-transform: uppercase; letter-spacing: 1px; }
+        
+        /* Animaciones de entrada */
+        .fade-in { opacity: 0; transform: translateY(30px); transition: all 1s ease-out; }
+        .visible { opacity: 1; transform: translateY(0); }
+
+        /* ================== PORTADA (HERO) ================== */
+        .hero {
+            height: 100vh; display: flex; flex-direction: column;
+            justify-content: center; align-items: center; text-align: center;
+            background: linear-gradient(180deg, rgba(255,255,255,0.9) 0%, rgba(255,230,230,1) 100%);
+            border-bottom: 10px dashed var(--snoopy-red);
+            position: relative; overflow: hidden;
+            z-index: 2;
+        }
+
+        .hero img {
+            width: 280px; max-width: 80%;
+            filter: drop-shadow(0 10px 10px rgba(0,0,0,0.2));
+            animation: float 4s ease-in-out infinite;
+        }
+
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px) rotate(2deg); } }
+
+        .btn-start {
+            background: var(--snoopy-red); color: white;
+            padding: 15px 50px; font-size: 1.8rem; border: 4px solid white;
+            border-radius: 50px; cursor: pointer; font-family: var(--font-title);
+            margin-top: 30px; box-shadow: 0 10px 20px rgba(211, 47, 47, 0.4);
+            transition: all 0.3s;
+        }
+        .btn-start:hover { transform: scale(1.1) rotate(-3deg); background: #b71c1c; }
+
+        /* ================== CONTENEDORES DE SECCIÓN ================== */
+        .section-box {
+            background: rgba(255, 255, 255, 0.95);
+            margin: 60px 20px; padding: 40px 20px;
+            border-radius: 30px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            border: 3px solid var(--snoopy-red);
+            position: relative;
+        }
+        /* Decoración de casita de Snoopy en las esquinas */
+        .section-box::before {
+            content: '🐾'; position: absolute; top: -25px; left: 20px;
+            font-size: 40px; transform: rotate(-20deg); background: white; border-radius: 50%; padding: 5px; border: 2px solid var(--snoopy-red);
+        }
+
+        /* ================== TIMELINE (HISTORIA) ================== */
+        .timeline { position: relative; max-width: 800px; margin: 0 auto; }
+        .timeline::after {
+            content: ''; position: absolute; width: 6px;
+            background-color: var(--snoopy-red); top: 0; bottom: 0; left: 50%; margin-left: -3px; border-radius: 5px;
+        }
+        .container-tl { padding: 10px 40px; position: relative; width: 50%; box-sizing: border-box; }
+        .left { left: 0; } .right { left: 50%; }
+        
+        .content-tl {
+            padding: 20px; background: white; border-radius: 15px;
+            border: 2px dashed var(--snoopy-black);
+            box-shadow: 5px 5px 0px rgba(0,0,0,0.1);
+        }
+        .content-tl h3 { margin-top: 0; color: var(--snoopy-black); }
+        .content-tl img { width: 100%; border-radius: 10px; margin-top: 10px; }
+
+        .container-tl::after {
+            content: '❤️'; position: absolute; width: 30px; height: 30px;
+            right: -19px; background: white; border: 3px solid var(--snoopy-red);
+            top: 20px; border-radius: 50%; z-index: 10; text-align: center; line-height: 30px;
+        }
+        .right::after { left: -19px; }
+
+        /* ================== GALERÍA POLAROID ================== */
+        .gallery { display: flex; flex-wrap: wrap; justify-content: center; gap: 40px; padding: 20px; }
+        .polaroid {
+            background: white; padding: 15px 15px 50px 15px;
+            box-shadow: 10px 10px 20px rgba(0,0,0,0.15);
+            transform: rotate(-3deg); transition: 0.4s; width: 220px;
+        }
+        .polaroid:nth-child(even) { transform: rotate(3deg); }
+        .polaroid:hover { transform: scale(1.1) rotate(0deg) !important; z-index: 5; }
+        .polaroid img { width: 100%; height: 220px; object-fit: cover; border: 1px solid #ddd; }
+        .caption { font-size: 1.2rem; margin-top: 15px; color: #555; font-weight: bold; text-align: center;}
+
+        /* ================== NUEVO: COLLAGE TIPO PINTEREST ================== */
+        .masonry-grid { column-count: 3; column-gap: 15px; }
+        .masonry-item {
+            break-inside: avoid; margin-bottom: 15px;
+            background: white; padding: 8px; border-radius: 10px;
+            box-shadow: 3px 3px 8px rgba(0,0,0,0.2); transition: transform 0.3s;
+        }
+        .masonry-item:hover { transform: scale(1.05); z-index: 10; }
+        .masonry-item img { width: 100%; border-radius: 5px; display: block; }
+        
+        .sticker-woodstock {
+            position: absolute; bottom: -30px; right: -10px; width: 80px; transform: rotate(15deg);
+        }
+
+        /* ================== CARTAS "OPEN WHEN" ================== */
+        .letters-container { display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; }
+        .envelope {
+            width: 140px; height: 100px;
+            background: var(--charlie-shirt);
+            border: 3px solid var(--snoopy-black);
+            border-radius: 10px;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            cursor: pointer; transition: 0.3s; position: relative;
+            background-image: repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(0,0,0,0.05) 10px, rgba(0,0,0,0.05) 20px);
+        }
+        .envelope:hover { transform: translateY(-10px); background: #ffd54f; }
+        .envelope span { font-size: 30px; }
+        .envelope p { margin: 5px 0 0; font-family: var(--font-title); color: var(--snoopy-black); font-size: 0.9rem; text-align: center;}
+
+        /* ================== CUPÓN Y JUEGO ================== */
+        .interactive-section { text-align: center; }
+        
+        .coupon-wrapper {
+            background: white; border: 4px dashed var(--snoopy-red);
+            padding: 20px; display: inline-block; border-radius: 15px;
+            cursor: pointer; position: relative; max-width: 350px;
+            box-shadow: 0 10px 0 #ddd; transition: 0.2s;
+        }
+        .coupon-wrapper:active { box-shadow: 0 5px 0 #ddd; transform: translateY(5px); }
+
+        .btn-game {
+            background: #ff7043; color: white; padding: 20px 40px;
+            font-family: var(--font-title); font-size: 1.5rem;
+            border: none; border-radius: 50px; cursor: pointer;
+            margin-top: 20px; box-shadow: 0 8px 0 #d84315;
+            transition: 0.2s; display: inline-block;
+        }
+        .btn-game:hover { transform: scale(1.05); }
+
+        /* ================== VENTANAS EMERGENTES (MODALES) ================== */
+        .modal {
+            display: none; position: fixed; z-index: 1000; left: 0; top: 0;
+            width: 100%; height: 100%; background-color: rgba(0,0,0,0.85);
+            backdrop-filter: blur(5px);
+            align-items: center; justify-content: center;
+        }
+        .modal-content {
+            background: white; padding: 30px; border-radius: 25px;
+            width: 90%; max-width: 450px; text-align: center; position: relative;
+            border: 5px solid var(--snoopy-black);
+            box-shadow: 0 0 30px rgba(255,255,255,0.2);
+            animation: popIn 0.3s ease;
+        }
+        @keyframes popIn { 0% { transform: scale(0.5); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+        
+        .modal-sad { background: #e1f5fe; border-color: #0288d1; }
+        .modal-angry { background: #ffebee; border-color: #d32f2f; }
+        .modal-love { background: #fce4ec; border-color: #c2185b; }
+        
+        .close-btn {
+            position: absolute; top: 10px; right: 15px;
+            font-size: 40px; font-weight: bold; color: rgba(0,0,0,0.3);
+            cursor: pointer; line-height: 20px;
+        }
+
+        #game-canvas {
+            border: 3px solid #333; background: #81d4fa;
+            border-radius: 10px; margin: 10px auto; display: block;
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.1);
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .timeline::after { left: 31px; }
+            .container-tl { width: 100%; padding-left: 70px; padding-right: 25px; }
+            .container-tl::after { left: 15px; }
+            .left, .right { left: 0; }
+            .hero h1 { font-size: 2rem; }
+            .masonry-grid { column-count: 2; }
+        }
+    </style>
+</head>
+<body>
+
+    <audio id="bg-music" loop>
+        <source src="Love Yourself V1.mp3" type="audio/mp3">
+    </audio>
+
+    <div class="hero" id="hero">
+        <img src="hugging-heart-snoopy.gif" alt="Snoopy">
+        <h1 style="margin-top: 20px; font-size: 3rem;">Para mi Valentín</h1>
+        <p style="font-size: 1.5rem;">Te amo con todo mi ser corazón de melón</p>
+        <button class="btn-start" onclick="enterGift()">¡Abrir Regalo! 🐾</button>
+    </div>
+
+    <div id="main-content" style="display:none;">
+
+        <div class="section-box fade-in">
+            <h2>📜 Nuestra Historia</h2>
+            <div class="timeline">
+                <div class="container-tl left">
+                    <div class="content-tl">
+                        <h3>El Comienzo</h3>
+                        <p>Cuando apenas nos conociamos, supe que queria quedarme contigo.</p>
+                        <img src="33.jpeg" alt="Foto 1">
+                    </div>
+                </div>
+                <div class="container-tl right">
+                    <div class="content-tl">
+                        <h3>Pasar contigo</h3>
+                        <p>No cambio por nada lo seguro que me siento cuando estoy contigo</p>
+                        <img src="35.jpeg" alt="Foto 2">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-box fade-in">
+            <h2>📸 Momentos Favoritos</h2>
+            <div class="gallery">
+                <div class="polaroid">
+                    <img src="28.jpeg" alt="Nosotros">
+                    <div class="caption">Haciendo el tonto 🤪</div>
+                </div>
+                <div class="polaroid">
+                    <img src="2.jpeg" alt="Viaje">
+                    <div class="caption">Te amo ❤️</div>
+                </div>
+                <div class="polaroid">
+                    <img src="1.jpeg" alt="Amor">
+                    <div class="caption">Te amo ❤️</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-box fade-in">
+            <h2>🧩 Mi persona favorita</h2>
+            <p style="text-align: center;">Me encanta la mujer que tengo a mi lado</p>
+            <div class="masonry-grid">
+                <div class="masonry-item"><img src="36.jpeg"></div>
+                <div class="masonry-item"><img src="37.jpeg"></div>
+                <div class="masonry-item"><img src="38.jpeg"></div>
+                <div class="masonry-item"><img src="39.jpeg"></div>
+                <div class="masonry-item"><img src="40.jpeg"></div>
+                <div class="masonry-item"><img src="41.jpeg"></div>
+            </div>
+            <img src="snoopy.gif" class="sticker-woodstock" alt="Woodstock">
+        </div>
+
+        <div class="section-box fade-in">
+            <h2>💌 Ábrelo cuando...</h2>
+            <div class="letters-container">
+                <div class="envelope" onclick="openLetter('sad')">
+                    <span>🌧️</span> <p>Estés Triste</p>
+                </div>
+                <div class="envelope" onclick="openLetter('angry')">
+                    <span>🔥</span> <p>Estés Enojada</p>
+                </div>
+                <div class="envelope" onclick="openLetter('love')">
+                    <span>💖</span> <p>Me Extrañes</p>
+                </div>
+            </div>
+
+            <hr style="margin: 40px 0; border: 2px dashed #eee;">
+
+            <h2>🎁 Tu Cupón Especial</h2>
+            <div class="interactive-section">
+                <div class="coupon-wrapper" onclick="generateCoupon()">
+                    <h3 id="coupon-title">❓ RASPA AQUÍ ❓</h3>
+                    <p id="coupon-desc">Haz clic para descubrir tu regalo de San Valentín</p>
+                </div>
+                <div style="margin-top: 15px;">
+                    <a id="download-btn" href="#" download="Cupon_Amor.png" style="display:none; color: var(--snoopy-red); font-weight: bold; text-decoration: none;">⬇️ Descargar Imagen</a>
+                </div>
+                <canvas id="couponCanvas" width="400" height="200" style="display:none;"></canvas>
+            </div>
+        </div>
+
+        <div class="section-box fade-in" style="text-align: center; background-color: #fff9c4;">
+            <h2>🕹️ Zona de Juegos</h2>
+            <p>¡Ayuda a Snoopy a volar!</p>
+            <button class="btn-game" onclick="openGame()">🎮 JUGAR AHORA</button>
+        </div>
+
+        <footer style="text-align: center; padding: 30px; opacity: 0.6; font-size: 0.9rem;">
+            Te amo con todo mi corazón. | San Valentín 2026
+        </footer>
+    </div>
+
+    <div id="letter-modal" class="modal" onclick="closeModal(event, 'letter-modal')">
+        <div id="letter-content" class="modal-content">
+            <span class="close-btn" onclick="document.getElementById('letter-modal').style.display='none'">&times;</span>
+            <h3 id="modal-title">Título</h3>
+            <p id="modal-text">Texto...</p>
+            <img id="modal-img" src="" style="max-width: 100%; border-radius: 10px; margin-top: 10px;">
+        </div>
+    </div>
+
+    <div id="game-modal" class="modal">
+        <div class="modal-content" style="background: #e0f7fa; width: auto; max-width: 95%;">
+            <span class="close-btn" onclick="closeGame()">&times;</span>
+            <h3 style="color:#333">Flappy Snoopy 🐶</h3>
+            <canvas id="game-canvas" width="320" height="400"></canvas>
+            <p>Toca la pantalla para volar</p>
+            <p id="score-display">Puntuación: 0</p>
+            <button id="restart-btn" style="display:none; margin: 10px auto; padding: 10px 20px; background: var(--snoopy-red); color: white; border: none; border-radius: 10px; cursor: pointer;" onclick="resetGame()">Intentar de nuevo</button>
+        </div>
+    </div>
+
+    <script>
+        // --- ANIMACIONES DE SCROLL ---
+        function enterGift() {
+            document.getElementById('hero').style.display = 'none';
+            document.getElementById('main-content').style.display = 'block';
+            document.getElementById('bg-music').play().catch(e => console.log("Audio bloqueado"));
+            
+            // Activar animaciones
+            const observer = new IntersectionObserver(entries => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            });
+            document.querySelectorAll('.fade-in').forEach(sec => observer.observe(sec));
+        }
+
+        // --- LÓGICA DE CARTAS ---
+        const letters = {
+            'sad': {
+                title: "No llores...",
+                text: "Hasta Snoopy tiene días malos. Recuerda que siempre estaré aquí para apoyarte y dar todo de mi para que te sientas un poquito mejor. ¡Te amo!",
+                img: "snoopy-abrazo-love.gif",
+                style: "modal-sad"
+            },
+            'angry': {
+                title: "Paz y Amor 🏳️",
+                text: "Sé que a veces estoy menso como Charlie Brown, pero mi amor por ti es sincero. ¿Me perdonas?",
+                img: "snoopy-peep.gif",
+                style: "modal-angry"
+            },
+            'love': {
+                title: "Te extraño un montón",
+                text: "No veo la hora de verte de nuevo. Eres la persona que mas quiero ver en todo el mundo.",
+                img: "snoopy_bad.gif",
+                style: "modal-love"
+            }
+        };
+
+        function openLetter(type) {
+            const data = letters[type];
+            const modal = document.getElementById('letter-modal');
+            const content = document.getElementById('letter-content');
+            
+            content.className = "modal-content " + data.style;
+            document.getElementById('modal-title').innerText = data.title;
+            document.getElementById('modal-text').innerText = data.text;
+            document.getElementById('modal-img').src = data.img;
+            
+            modal.style.display = 'flex';
+        }
+
+        function closeModal(e, id) {
+            if(e.target.id === id) document.getElementById(id).style.display = 'none';
+        }
+
+        // --- CUPÓN CANVAS ---
+        function generateCoupon() {
+            const wrapper = document.querySelector('.coupon-wrapper');
+            wrapper.style.borderColor = "#ffd700";
+            wrapper.style.background = "#fff8e1";
+            document.getElementById('coupon-title').innerText = "🎉 ¡DESEO DE SAN VALENTIN! 🎉";
+            document.getElementById('coupon-desc').innerText = "Válido por un deseo o petición que me quieras hacer sin que yo pueda negarme.";
+            
+            // Generar imagen
+            const canvas = document.getElementById('couponCanvas');
+            const ctx = canvas.getContext('2d');
+            ctx.fillStyle = "#fff"; ctx.fillRect(0,0,400,200);
+            ctx.strokeStyle = "#d32f2f"; ctx.lineWidth = 8; ctx.strokeRect(5,5,390,190);
+            ctx.fillStyle = "#d32f2f"; ctx.font = "bold 30px Arial"; ctx.textAlign = "center";
+            ctx.fillText("VALE POR:", 200, 60);
+            ctx.fillStyle = "#333"; ctx.font = "25px Arial";
+            ctx.fillText("DESEO DE SAN VALENTIN", 200, 110);
+            ctx.font = "15px Arial"; ctx.fillText("San Valentín 2026", 200, 160);
+            
+            // Enlace descarga
+            const link = document.getElementById('download-btn');
+            link.href = canvas.toDataURL();
+            link.style.display = 'inline-block';
+        }
+
+        // --- JUEGO FLAPPY SNOOPY (LÓGICA) ---
+        let gameRunning = false;
+        let gameFrame = 0;
+        let score = 0;
+        let canvas, ctx;
+        let gameLoopId;
+
+        const snoopy = {
+            x: 50, y: 150, radius: 15, vy: 0, gravity: 0.25, jump: -4.5,
+            draw: function() {
+                ctx.fillStyle = "white"; ctx.beginPath(); ctx.arc(this.x, this.y, this.radius, 0, Math.PI*2); ctx.fill(); ctx.stroke();
+                ctx.fillStyle = "black"; ctx.beginPath(); ctx.ellipse(this.x-5, this.y+2, 6, 9, 0, 0, Math.PI*2); ctx.fill(); // Oreja
+            },
+            update: function() {
+                this.vy += this.gravity;
+                this.y += this.vy;
+            }
+        };
+
+        const pipes = {
+            items: [],
+            draw: function() {
+                if(gameFrame % 100 === 0) {
+                    let gap = 110;
+                    let top = Math.random() * (canvas.height - gap - 40) + 20;
+                    this.items.push({ x: canvas.width, top: top, bot: canvas.height - top - gap });
+                }
+                for(let i=0; i<this.items.length; i++) {
+                    let p = this.items[i];
+                    ctx.fillStyle = "#d32f2f";
+                    ctx.fillRect(p.x, 0, 40, p.top);
+                    ctx.fillRect(p.x, canvas.height - p.bot, 40, p.bot);
+                    p.x -= 2;
+
+                    // Colisiones
+                    if(snoopy.x + 15 > p.x && snoopy.x - 15 < p.x + 40) {
+                        if(snoopy.y - 15 < p.top || snoopy.y + 15 > canvas.height - p.bot) endGame();
+                    }
+                }
+            }
+        };
+
+        function openGame() {
+            document.getElementById('game-modal').style.display = 'flex';
+            canvas = document.getElementById('game-canvas');
+            ctx = canvas.getContext('2d');
+            canvas.addEventListener('mousedown', () => snoopy.vy = snoopy.jump);
+            canvas.addEventListener('touchstart', (e) => { e.preventDefault(); snoopy.vy = snoopy.jump; });
+            resetGame();
+        }
+
+        function closeGame() {
+            document.getElementById('game-modal').style.display = 'none';
+            gameRunning = false;
+            cancelAnimationFrame(gameLoopId);
+        }
+
+        function resetGame() {
+            snoopy.y = 150; snoopy.vy = 0; score = 0; gameFrame = 0;
+            pipes.items = [];
+            gameRunning = true;
+            document.getElementById('restart-btn').style.display = 'none';
+            animate();
+        }
+
+        function animate() {
+            if(!gameRunning) return;
+            ctx.clearRect(0,0, canvas.width, canvas.height);
+            
+            snoopy.update();
+            snoopy.draw();
+            pipes.draw();
+            
+            // Suelo y techo
+            if(snoopy.y > canvas.height || snoopy.y < 0) endGame();
+
+            score = Math.floor(gameFrame/50);
+            document.getElementById('score-display').innerText = "Puntuación: " + score;
+            
+            gameFrame++;
+            gameLoopId = requestAnimationFrame(animate);
+        }
+
+        function endGame() {
+            gameRunning = false;
+            ctx.fillStyle = "rgba(0,0,0,0.5)"; ctx.fillRect(0,0,canvas.width, canvas.height);
+            ctx.fillStyle = "white"; ctx.font = "30px Arial"; ctx.fillText("Game Over", 80, 200);
+            document.getElementById('restart-btn').style.display = 'block';
+        }
+
+    </script>
+</body>
+</html>
